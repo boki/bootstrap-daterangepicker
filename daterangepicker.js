@@ -25,7 +25,7 @@
         this.format = 'MM/dd/yyyy';
         this.separator = ' - ';
         this.showWeekNumbers = false;
-        this.buttonClasses = ['btn-success'];
+        this.buttonClasses = [];
         this.locale = {
             applyLabel: 'Apply',
             clearLabel:"Clear",
@@ -159,11 +159,11 @@
                     this.ranges[range] = [start, end];
                 }
 
-                var list = '<ul>';
+                var list = '<ul class="nav nav-pills nav-stacked">';
                 for (var range in this.ranges) {
-                    list += '<li>' + range + '</li>';
+                    list += '<li><a href="#' + range.toLowerCase().replace(/\s+/g, "-") + '">' + range + '</a></li>';
                 }
-                list += '<li>' + this.locale.customRangeLabel + '</li>';
+                list += '<li><a href="#custom-range">' + this.locale.customRangeLabel + '</a></li>';
                 list += '</ul>';
                 this.container.find('.ranges').prepend(list);
             }
@@ -350,7 +350,10 @@
         },
 
         clickRange: function (e) {
-            var label = e.target.innerHTML;
+            var label = e.target.innerHTML,
+                $e = $(e.target);
+            $e.closest(".nav-pills").find(".active").removeClass("active");
+            $e.parent().addClass("active");
             if (label == this.locale.customRangeLabel) {
                 this.container.find('.calendar').show();
             } else {
@@ -368,6 +371,8 @@
                 this.container.find('.calendar').hide();
                 this.hide();
             }
+
+            return false;
         },
 
         clickPrev: function (e) {
